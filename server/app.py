@@ -30,6 +30,28 @@ def bakery_by_id(id):
     bakery_serialized = bakery.to_dict()
     return make_response ( bakery_serialized, 200  )
 
+@app.route('/baked_goods', methods=['POST'])
+def create_baked_goods():
+
+    if request.method == 'POST':
+        new_baked_good = BakedGood(
+            name=request.form.get("name"),
+            price=request.form.get("price"),
+            bakery_id=request.form.get("bakery_id"),
+        )
+
+        db.session.add(new_baked_good)
+        db.session.commit()
+
+        baked_good_dict = new_baked_good.to_dict()
+
+        response = make_response(
+            baked_good_dict_dict,
+            201
+        )
+
+        return response
+
 @app.route('/baked_goods/by_price')
 def baked_goods_by_price():
     baked_goods_by_price = BakedGood.query.order_by(BakedGood.price.desc()).all()
